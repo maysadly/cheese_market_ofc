@@ -10,6 +10,24 @@ func Router(app *fiber.App) {
 	api := app.Group("/api/v1")
 	api.Get("/", controllers.Welcome)
 
+	app.Get("/", func(c *fiber.Ctx) error {
+		return c.Render("shop", fiber.Map{
+			"Title": "Cheese Market",
+		})
+	})
+
+	app.Get("/login", func(c *fiber.Ctx) error {
+		return c.Render("login", fiber.Map{
+			"Title": "Login",
+		})
+	})
+
+	app.Get("/register", func(c *fiber.Ctx) error {
+		return c.Render("register", fiber.Map{
+			"Title": "Registration",
+		})
+	})
+
 	//auth routes
 	userApi := api.Group("/users/auth")
 	userApi.Post("/signup", middlewares.ValidateCredentialsMiddleware, controllers.Signup)
