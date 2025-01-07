@@ -1,32 +1,15 @@
 package routes
 
 import (
-	"github.com/gofiber/fiber/v2"
 	"jwt-golang/controllers"
 	"jwt-golang/middlewares"
+
+	"github.com/gofiber/fiber/v2"
 )
 
 func Router(app *fiber.App) {
 	api := app.Group("/api/v1")
 	api.Get("/", controllers.Welcome)
-
-	app.Get("/", func(c *fiber.Ctx) error {
-		return c.Render("shop", fiber.Map{
-			"Title": "Cheese Market",
-		})
-	})
-
-	app.Get("/login", func(c *fiber.Ctx) error {
-		return c.Render("login", fiber.Map{
-			"Title": "Login",
-		})
-	})
-
-	app.Get("/register", func(c *fiber.Ctx) error {
-		return c.Render("register", fiber.Map{
-			"Title": "Registration",
-		})
-	})
 
 	//auth routes
 	userApi := api.Group("/users/auth")
@@ -64,4 +47,6 @@ func Router(app *fiber.App) {
 	adminApi.Delete("/deleteUser/:id", controllers.DeleteUser)
 	adminApi.Delete("/deleteUsers", controllers.DeleteAllUsers)
 
+	emailApi := api.Group("/email", middlewares.RequireAuthMiddleware)
+	emailApi.Post("/send", controllers.OrderAll)
 }
